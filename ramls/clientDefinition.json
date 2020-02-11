@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Information about client",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "id of client",
+      "type": "string"
+    },
+    "lastName": {
+      "description": "The client surname",
+      "type": "string"
+    },
+    "firstName": {
+      "description": "The client given name",
+      "type": "string"
+    },
+    "middleName": {
+      "description": "The client middle name",
+      "type": "string"
+    },
+    "email": {
+      "description": "The client email address",
+      "type": "string"
+    },
+    "phone": {
+      "description": "The user's primary phone number",
+      "type": "string"
+    },
+    "mobilePhone": {
+      "description": "The client mobile phone number",
+      "type": "string"
+    },
+    "dateOfBirth": {
+      "type": "string",
+      "description": "The user's birth date",
+      "format": "date-time"
+    }
+  },
+  "createDate": {
+    "description": "Date and time when the upload definition was created",
+    "type": "string",
+    "format": "date-time"
+  },
+  "required": [
+    "id"
+  ]
+}
