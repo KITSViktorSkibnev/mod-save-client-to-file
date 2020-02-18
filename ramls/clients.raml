@@ -27,11 +27,18 @@ resourceTypes:
 
 /clients:
   post:
+    is: [validate]
     body:
       application/json:
         type: clientDefinition
     responses:
       201:
+        headers:
+          location:
+            description: Location header
+        body:
+          application/json:
+            type: clientDefinition
       400:
         description: "Bad request"
         body:
@@ -47,3 +54,67 @@ resourceTypes:
         body:
           text/plain:
             example: "Internal server error"
+  put:
+    body:
+      application/json:
+        type: clientDefinition
+    responses:
+      204:
+      400:
+        description: "Bad request"
+        body:
+          text/plain:
+            example: "Bad request"
+      404:
+        description: "Not found"
+        body:
+          text/plain:
+            example: "Not found"
+      500:
+        description: "Internal server error"
+        body:
+          text/plain:
+            example: "Internal server error"
+  /{clientsId}:
+    delete:
+      responses:
+        204:
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        404:
+          description: "Not found"
+          body:
+            text/plain:
+              example: "Not found"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"
+  /{clientsEmail}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: clientDefinition
+        400:
+          description: "Bad request"
+          body:
+            text/plain:
+              example: "Bad request"
+        404:
+          description: "Not found"
+          body:
+            text/plain:
+              example: "Not found"
+        500:
+          description: "Internal server error"
+          body:
+            text/plain:
+              example: "Internal server error"
+
+

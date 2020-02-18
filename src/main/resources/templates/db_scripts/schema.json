@@ -1,8 +1,8 @@
 {
-  "tables": [
+  "tables":[
     {
-      "tableName": "upload_definitions",
-      "fromModuleVersion": "mod-data-import-1.9.0",
+      "tableName": "client_definitions",
+      "fromModuleVersion": "mod-clients-import-1.9.0",
       "withMetadata": true,
       "withAuditing": false,
       "uniqueIndex": [
@@ -11,29 +11,6 @@
           "tOps": "ADD"
         }
       ]
-    },
-    {
-      "tableName": "file_extensions",
-      "fromModuleVersion": "mod-data-import-1.9.0",
-      "withMetadata": true,
-      "uniqueIndex": [
-        {
-          "fieldName": "extension",
-          "tOps": "ADD"
-        }
-      ]
-    },
-    {
-      "tableName": "default_file_extensions",
-      "fromModuleVersion": "mod-data-import-1.9.0",
-      "withMetadata": true,
-      "uniqueIndex": [
-        {
-          "fieldName": "extension",
-          "tOps": "ADD"
-        }
-      ],
-      "customSnippetPath": "defaultFileExtensions.sql"
     }
-  ]
+]
 }
