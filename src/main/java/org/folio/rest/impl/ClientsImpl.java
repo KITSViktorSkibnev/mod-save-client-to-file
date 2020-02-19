@@ -10,6 +10,7 @@ import org.folio.rest.tools.utils.TenantTool;
 import org.folio.spring.SpringContextUtil;
 
 import javax.ws.rs.core.Response;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import static org.folio.dataimport.util.DaoUtil.constructCriteria;
@@ -71,23 +72,21 @@ public class ClientsImpl implements org.folio.rest.jaxrs.resource.Clients {
   @Override
   public void getClientsByClientsEmail(String clientsEmail, Map<String, String> okapiHeaders, Handler<AsyncResult<Response>> asyncResultHandler, Context vertxContext) {
     vertxContext.runOnContext(c -> {
-      String correctEmail;
-      Criteria criteria = null;
-      if (clientsEmail.contains("%40")){
-        correctEmail = clientsEmail.replace("%40","@");
-        criteria = constructCriteria(CLIENT_DEFINITION_EMAIL_FIELD, correctEmail);
-      }else{
-        criteria = constructCriteria(CLIENT_DEFINITION_EMAIL_FIELD, clientsEmail);
+      try {
+        String correctEmail = URLDecoder.decode(clientsEmail, "utf-8");
+        Criteria criteria = constructCriteria(CLIENT_DEFINITION_EMAIL_FIELD, correctEmail);
+        PgUtil.postgresClient(vertxContext, okapiHeaders).get(CLIENT_DEFINITION_TABLE, ClientDefinition.class, new Criterion(criteria),false, reply -> {
+          if (reply.failed()){
+            asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(reply.cause())));
+          }else if (reply.result().getResults().isEmpty()){
+            asyncResultHandler.handle(Future.succeededFuture(GetClientsByClientsEmailResponse.respond404WithTextPlain(reply.result())));
+          }else{
+            asyncResultHandler.handle(Future.succeededFuture(GetClientsByClientsEmailResponse.respond200WithApplicationJson(reply.result().getResults().get(0))));
+          }
+        });
+      }catch(Exception exc){
+        asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(exc)));
       }
-      PgUtil.postgresClient(vertxContext, okapiHeaders).get(CLIENT_DEFINITION_TABLE, ClientDefinition.class, new Criterion(criteria),false, reply -> {
-        if (reply.failed()){
-          asyncResultHandler.handle(Future.succeededFuture(ExceptionHelper.mapExceptionToResponse(reply.cause())));
-        }else if (reply.result().getResults().isEmpty()){
-          asyncResultHandler.handle(Future.succeededFuture(GetClientsByClientsEmailResponse.respond404WithTextPlain(reply.result())));
-        }else{
-          asyncResultHandler.handle(Future.succeededFuture(GetClientsByClientsEmailResponse.respond200WithApplicationJson(reply.result().getResults().get(0))));
-        }
-      });
     });
   }
 }
